@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Tetris - Cyberpunk Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Loading Screen (Cyberpunk Boot Sequence) -->
+    <div id="screen-loading" class="screen active flex-col items-center justify-center p-4"
+        style="z-index: 100; background: #030308;">
+        <div class="w-full max-w-md text-center">
+            <h1 class="text-3xl md:text-5xl font-black mb-2 cyber-font glow-text-cyan tracking-wider">SYSTEM BOOT</h1>
+            <p id="loading-text" class="text-pink-400 text-xs md:text-sm tracking-widest mb-6 h-6">INITIALIZING
+                KERNEL...</p>
+
+            <!-- Progress Bar Container -->
+            <div
+                class="w-full bg-black/80 border-2 border-cyan-500/60 p-1 rounded relative shadow-[0_0_20px_rgba(0,243,255,0.2)]">
+                <div id="loading-bar"
+                    class="h-6 bg-gradient-to-r from-cyan-500 to-pink-500 w-0 transition-all duration-75 relative">
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-3 text-sm cyber-font">
+                <span class="text-gray-400 text-xs">CYBER_OS // v2.6</span>
+                <span id="loading-percent" class="text-cyan-400 font-bold text-lg">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="screen-main" class="screen flex-col items-center justify-center p-4">
+        <h1 class="text-5xl md:text-7xl font-black mb-2 cyber-font glow-text-cyan text-center">NEON TETRIS</h1>
+        <p class="text-gray-400 mb-10 tracking-widest text-sm text-center">CYBER MATRIX // SYSTEM v2.6</p>
+
+        <div class="flex flex-col gap-4 w-full max-w-xs">
+            <button class="btn-cyber py-3 px-6 text-xl font-bold" onclick="navTo('screen-level')">Play Grid</button>
+            <button class="btn-cyber magenta py-3 px-6 text-xl font-bold"
+                onclick="navTo('screen-stats')">Records</button>
+            <button class="btn-cyber py-3 px-6 text-xl font-bold" onclick="navTo('screen-settings')">Settings</button>
+        </div>
+    </div>
+
+    <!-- Level Select -->
+    <div id="screen-level" class="screen flex-col items-center justify-center p-4">
+        <h2 class="text-3xl mb-8 cyber-font glow-text-magenta text-center">SELECT MATRIX LEVEL</h2>
+        <div class="level-grid mb-8">
+            <script>
+                for (let i = 1; i <= 10; i++) {
+                    document.write(`<button class="btn-cyber py-4 text-xl font-bold flex items-center justify-center" onclick="startGame(${i})">${i}</button>`);
+                }
+            </script>
+        </div>
+        <button class="text-gray-400 hover:text-white underline mt-4 cursor-pointer cyber-font text-xs"
+            onclick="navTo('screen-main')">&lt; BACK TO MAIN</button>
+    </div>
+
+    <!-- Fullpage Stats Screen (Tanpa Scroll) -->
+    <div id="screen-stats" class="screen flex-col items-center justify-center p-4 md:p-8">
+        <h2 class="text-2xl md:text-4xl mb-4 cyber-font glow-text-cyan tracking-wider text-center">SYSTEM RECORDS</h2>
+
+        <!-- Grid Level 1-10 yang Optimal di Layar Penuh -->
+        <div class="stats-full-grid mb-6">
+            <script>
+                for (let i = 1; i <= 10; i++) {
+                    document.write(`
+                        <div class="stat-box cursor-pointer hover:border-cyan-400 transition transform hover:scale-[1.02]" onclick="openStatDetail(${i})">
+                            <div class="stat-label text-cyan-400">LVL ${i}</div>
+                            <div class="hud-line"></div>
+                            <div class="text-base md:text-lg font-bold text-white mt-1 truncate" id="stat-grid-score-${i}">0</div>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+
+        <!-- Ringkasan Global / Max Streak -->
+        <div
+            class="w-full max-w-[600px] md:max-w-[750px] bg-black/60 border border-pink-500/40 p-3 px-5 rounded flex justify-between items-center mb-6 shadow-[0_0_15px_rgba(255,0,255,0.1)]">
+            <span class="cyber-font text-xs md:text-sm text-pink-400 tracking-wider">GLOBAL MAX STREAK</span>
+            <span id="stat-max-streak" class="cyber-font text-lg md:text-xl font-bold text-yellow-400">0</span>
+        </div>
+
+        <button class="text-gray-400 hover:text-white underline cursor-pointer cyber-font text-xs"
+            onclick="navTo('screen-main')">&lt; BACK TO MAIN</button>
+    </div>
+
+    <!-- Stats Detail Modal -->
+    <div id="modal-stat-detail" class="screen flex-col items-center justify-center p-4"
+        style="background: rgba(3,3,8,0.98); z-index: 40;">
+        <div class="cyber-board-border bg-black p-6 rounded max-w-sm w-full text-center relative">
+            <h3 id="detail-level-title" class="text-xl cyber-font glow-text-cyan mb-4">LEVEL RECORDS</h3>
+            <div class="flex flex-col gap-3 text-left mb-6 text-sm">
+                <div class="flex justify-between border-b border-gray-800 pb-2">
+                    <span class="text-gray-400">High Score:</span>
+                    <span id="detail-score" class="text-cyan-400 font-bold">0</span>
+                </div>
+                <div class="flex justify-between border-b border-gray-800 pb-2">
+                    <span class="text-gray-400">Time Played:</span>
+                    <span id="detail-time" class="text-magenta-400 font-bold">00:00</span>
+                </div>
+                <div class="flex justify-between border-b border-gray-800 pb-2">
+                    <span class="text-gray-400">Best Streak:</span>
+                    <span id="detail-streak" class="text-yellow-400 font-bold">0</span>
+                </div>
+            </div>
+            <button class="btn-cyber py-2 px-6 w-full text-sm font-bold" onclick="closeStatDetail()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="screen-settings" class="screen flex-col items-center justify-center p-4">
+        <h2 class="text-3xl mb-8 cyber-font glow-text-magenta">SETTINGS</h2>
+        <div class="flex items-center gap-4 mb-8">
+            <span class="text-xl cyber-font text-cyan-400">SFX AUDIO:</span>
+            <button id="toggle-audio-btn" class="btn-cyber py-2 px-6 text-lg" onclick="toggleAudio()">ON</button>
+        </div>
+        <button class="text-gray-400 hover:text-white underline mt-4 cursor-pointer cyber-font text-xs"
+            onclick="navTo('screen-main')">&lt; BACK TO MAIN</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="screen-game" class="screen flex-col">
+        <div id="game-container">
+            <!-- Left Side Panel (Mobile Top) -->
+            <div class="ui-panel">
+                <button id="pause-btn" class="btn-cyber magenta py-2 px-2 text-sm mb-1 flex items-center justify-center"
+                    onclick="togglePause()">
+                    <svg id="pause-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22"
+                        height="22">
+                        <path fill="var(--neon-magenta)"
+                            d="M5 4 h3.5 a2 2 0 0 1 2 2 v12 a2 2 0 0 1 -2 2 h-3.5 a2 2 0 0 1 -2 -2 v-12 a2 2 0 0 1 2 -2 Z M15.5 4 h3.5 a2 2 0 0 1 2 2 v12 a2 2 0 0 1 -2 2 h-3.5 a2 2 0 0 1 -2 -2 v-12 a2 2 0 0 1 2 -2 Z" />
+                    </svg>
+                </button>
+                <div class="stat-box" id="next-piece-container">
+                    <div class="stat-label">NEXT MATRIX</div>
+                    <div class="hud-line"></div>
+                    <canvas id="next-canvas" width="60" height="60"
+                        style="background:transparent; border:none; box-shadow:none; aspect-ratio:1/1; margin: 4px auto 0 auto;"></canvas>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">LEVEL</div>
+                    <div class="hud-line"></div>
+                    <div class="stat-value mt-1" id="ui-level">1</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">TIME</div>
+                    <div class="hud-line"></div>
+                    <div class="stat-value text-yellow-400 mt-1" id="ui-timer" style="color:var(--neon-yellow)">00:00
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Canvas Wrapper with Cyberpunk Border -->
+            <div class="canvas-wrapper cyber-board-border relative">
+                <canvas id="tetris-canvas"></canvas>
+
+                <!-- Overlays -->
+                <div id="pause-overlay" class="overlay-msg glow-border-cyan text-cyan-400">
+                    <div>SYSTEM PAUSED</div>
+                    <button class="btn-cyber mt-4 py-2 px-6 text-sm w-full font-bold"
+                        onclick="resumeGame()">RESUME</button>
+                    <button class="btn-cyber magenta mt-2 py-2 px-6 text-sm w-full font-bold"
+                        onclick="quitToLevelSelect()">SELECT LEVEL</button>
+                    <button class="text-xs text-gray-400 mt-3 underline cursor-pointer cyber-font"
+                        onclick="quitGame()">ABORT TO MAIN</button>
+                </div>
+
+                <div id="gameover-overlay" class="overlay-msg text-red-500"
+                    style="border-color:var(--neon-red); box-shadow: 0 0 30px rgba(255,51,51,0.4);">
+                    <div class="text-red-400 glow-text-cyan" style="text-shadow: 0 0 10px var(--neon-red);">SYSTEM
+                        FAILURE</div>
+                    <div class="text-xs mt-1 text-gray-300 font-mono">CONNECTION LOST</div>
+                    <div class="text-base mt-3 text-white mb-4">Score: <span id="final-score"
+                            class="text-cyan-400 font-bold"></span></div>
+
+                    <button class="btn-cyber py-2 px-6 text-sm w-full font-bold mb-2"
+                        onclick="retryGame()">RETRY</button>
+                    <button class="btn-cyber magenta py-2 px-6 text-sm w-full font-bold mb-2"
+                        onclick="quitToLevelSelect()">SELECT LEVEL</button>
+                    <button class="text-xs text-gray-400 mt-2 underline cursor-pointer cyber-font"
+                        onclick="quitGame()">ABORT TO MAIN</button>
+                </div>
+            </div>
+
+            <!-- Right Side Panel (Mobile Bottom) -->
+            <div class="ui-panel">
+                <div class="stat-box">
+                    <div class="stat-label">SCORE</div>
+                    <div class="hud-line"></div>
+                    <div class="stat-value mt-1" id="ui-score">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label" style="color:var(--neon-magenta)">HIGH SCORE</div>
+                    <div class="hud-line"
+                        style="background: linear-gradient(90deg, transparent, var(--neon-magenta), transparent)"></div>
+                    <div class="stat-value text-magenta-400 mt-1" id="ui-highscore" style="color:var(--neon-magenta)">0
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">LINES</div>
+                    <div class="hud-line"></div>
+                    <div class="stat-value mt-1" id="ui-lines">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label text-yellow-400" style="color:var(--neon-yellow)">STREAK</div>
+                    <div class="hud-line"
+                        style="background: linear-gradient(90deg, transparent, var(--neon-yellow), transparent)"></div>
+                    <div class="stat-value text-yellow-400 mt-1" id="ui-streak" style="color:var(--neon-yellow)">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile On-Screen Controls -->
+        <div id="mobile-controls">
+            <div class="ctrl-group">
+                <button class="ctrl-btn" id="btn-left">←</button>
+                <button class="ctrl-btn" id="btn-down">↓</button>
+                <button class="ctrl-btn" id="btn-right">→</button>
+            </div>
+            <div class="ctrl-group">
+                <button class="ctrl-btn magenta" style="border-color:var(--neon-magenta); color:var(--neon-magenta);"
+                    id="btn-drop">⤓</button>
+                <button class="ctrl-btn magenta" style="border-color:var(--neon-magenta); color:var(--neon-magenta);"
+                    id="btn-rotate">↻</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
