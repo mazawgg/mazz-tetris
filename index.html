@@ -13,24 +13,21 @@
 
 <body>
 
-    <!-- Loading Screen (Cyberpunk Boot Sequence) -->
+    <!-- Loading Screen -->
     <div id="screen-loading" class="screen active flex-col items-center justify-center p-4"
         style="z-index: 100; background: #030308;">
         <div class="w-full max-w-md text-center">
             <h1 class="text-3xl md:text-5xl font-black mb-2 cyber-font glow-text-cyan tracking-wider">SYSTEM BOOT</h1>
             <p id="loading-text" class="text-pink-400 text-xs md:text-sm tracking-widest mb-6 h-6">INITIALIZING
                 KERNEL...</p>
-
-            <!-- Progress Bar Container -->
             <div
                 class="w-full bg-black/80 border-2 border-cyan-500/60 p-1 rounded relative shadow-[0_0_20px_rgba(0,243,255,0.2)]">
                 <div id="loading-bar"
                     class="h-6 bg-gradient-to-r from-cyan-500 to-pink-500 w-0 transition-all duration-75 relative">
                 </div>
             </div>
-
             <div class="flex justify-between items-center mt-3 text-sm cyber-font">
-                <span class="text-gray-400 text-xs">CYBER_OS // v2.6</span>
+                <span class="text-gray-400 text-xs">CYBER_OS // v2.7</span>
                 <span id="loading-percent" class="text-cyan-400 font-bold text-lg">0%</span>
             </div>
         </div>
@@ -39,13 +36,15 @@
     <!-- Main Menu -->
     <div id="screen-main" class="screen flex-col items-center justify-center p-4">
         <h1 class="text-5xl md:text-7xl font-black mb-2 cyber-font glow-text-cyan text-center">NEON TETRIS</h1>
-        <p class="text-gray-400 mb-10 tracking-widest text-sm text-center">CYBER MATRIX // SYSTEM v2.6</p>
+        <p class="text-gray-400 mb-10 tracking-widest text-sm text-center">CYBER MATRIX // SYSTEM v2.7</p>
 
         <div class="flex flex-col gap-4 w-full max-w-xs">
-            <button class="btn-cyber py-3 px-6 text-xl font-bold" onclick="navTo('screen-level')">Play Grid</button>
-            <button class="btn-cyber magenta py-3 px-6 text-xl font-bold"
+            <button class="btn-cyber py-3 px-6 text-xl font-bold menu-click" onclick="navTo('screen-level')">Play
+                Grid</button>
+            <button class="btn-cyber magenta py-3 px-6 text-xl font-bold menu-click"
                 onclick="navTo('screen-stats')">Records</button>
-            <button class="btn-cyber py-3 px-6 text-xl font-bold" onclick="navTo('screen-settings')">Settings</button>
+            <button class="btn-cyber py-3 px-6 text-xl font-bold menu-click"
+                onclick="navTo('screen-settings')">Settings</button>
         </div>
     </div>
 
@@ -55,19 +54,18 @@
         <div class="level-grid mb-8">
             <script>
                 for (let i = 1; i <= 10; i++) {
-                    document.write(`<button class="btn-cyber py-4 text-xl font-bold flex items-center justify-center" onclick="startGame(${i})">${i}</button>`);
+                    document.write(`<button class="btn-cyber py-4 text-xl font-bold flex items-center justify-center menu-click" onclick="startGame(${i})">${i}</button>`);
                 }
             </script>
         </div>
-        <button class="text-gray-400 hover:text-white underline mt-4 cursor-pointer cyber-font text-xs"
+        <button class="text-gray-400 hover:text-white underline mt-4 cursor-pointer cyber-font text-xs menu-click"
             onclick="navTo('screen-main')">&lt; BACK TO MAIN</button>
     </div>
 
-    <!-- Fullpage Stats Screen (Tanpa Scroll) -->
+    <!-- Fullpage Stats Screen -->
     <div id="screen-stats" class="screen flex-col items-center justify-center p-4 md:p-8">
         <h2 class="text-2xl md:text-4xl mb-4 cyber-font glow-text-cyan tracking-wider text-center">SYSTEM RECORDS</h2>
 
-        <!-- Grid Level 1-10 yang Optimal di Layar Penuh -->
         <div class="stats-full-grid mb-6">
             <script>
                 for (let i = 1; i <= 10; i++) {
@@ -82,14 +80,13 @@
             </script>
         </div>
 
-        <!-- Ringkasan Global / Max Streak -->
         <div
             class="w-full max-w-[600px] md:max-w-[750px] bg-black/60 border border-pink-500/40 p-3 px-5 rounded flex justify-between items-center mb-6 shadow-[0_0_15px_rgba(255,0,255,0.1)]">
             <span class="cyber-font text-xs md:text-sm text-pink-400 tracking-wider">GLOBAL MAX STREAK</span>
             <span id="stat-max-streak" class="cyber-font text-lg md:text-xl font-bold text-yellow-400">0</span>
         </div>
 
-        <button class="text-gray-400 hover:text-white underline cursor-pointer cyber-font text-xs"
+        <button class="text-gray-400 hover:text-white underline cursor-pointer cyber-font text-xs menu-click"
             onclick="navTo('screen-main')">&lt; BACK TO MAIN</button>
     </div>
 
@@ -112,27 +109,63 @@
                     <span id="detail-streak" class="text-yellow-400 font-bold">0</span>
                 </div>
             </div>
-            <button class="btn-cyber py-2 px-6 w-full text-sm font-bold" onclick="closeStatDetail()">CLOSE</button>
+            <button class="btn-cyber py-2 px-6 w-full text-sm font-bold menu-click"
+                onclick="closeStatDetail()">CLOSE</button>
         </div>
     </div>
 
     <!-- Settings Screen -->
     <div id="screen-settings" class="screen flex-col items-center justify-center p-4">
         <h2 class="text-3xl mb-8 cyber-font glow-text-magenta">SETTINGS</h2>
-        <div class="flex items-center gap-4 mb-8">
-            <span class="text-xl cyber-font text-cyan-400">SFX AUDIO:</span>
-            <button id="toggle-audio-btn" class="btn-cyber py-2 px-6 text-lg" onclick="toggleAudio()">ON</button>
+        <div class="flex flex-col gap-6 w-full max-w-xs bg-black/60 p-6 rounded border border-cyan-500/30">
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between text-sm cyber-font text-cyan-400">
+                    <span>SFX VOLUME:</span>
+                    <span id="sfx-val">100%</span>
+                </div>
+                <input type="range" id="sfx-slider" min="0" max="100" value="100"
+                    oninput="updateVolume('sfx', this.value)">
+            </div>
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between text-sm cyber-font text-magenta-400">
+                    <span>BGM VOLUME:</span>
+                    <span id="bgm-val">50%</span>
+                </div>
+                <input type="range" id="bgm-slider" min="0" max="100" value="50"
+                    style="accent-color: var(--neon-magenta);" oninput="updateVolume('bgm', this.value)">
+            </div>
+            <div class="flex flex-col gap-2">
+                <div class="text-sm cyber-font text-yellow-400 mb-1">BGM TRACK:</div>
+                <!-- Custom Cyber Dropdown -->
+                <div id="cyber-select" class="cyber-dropdown-wrapper">
+                    <div class="cyber-dropdown-selected" id="cyber-select-selected"
+                        onclick="toggleCyberDropdown(event)">
+                        01 // Cyber-Noir Rain (Ambient)
+                    </div>
+                    <div class="cyber-dropdown-list" id="cyber-select-list">
+                        <div class="cyber-dropdown-item" data-value="0"
+                            onclick="selectCyberOption(0, '01 // Cyber-Noir Rain (Ambient)')">01 // Cyber-Noir Rain
+                            (Ambient)</div>
+                        <div class="cyber-dropdown-item" data-value="1"
+                            onclick="selectCyberOption(1, '02 // ChillSynth Highway (Smooth)')">02 // ChillSynth Highway
+                            (Smooth)</div>
+                        <div class="cyber-dropdown-item" data-value="2"
+                            onclick="selectCyberOption(2, '03 // Dystopian Void (Deep)')">03 // Dystopian Void (Deep)
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button class="text-gray-400 hover:text-white underline mt-4 cursor-pointer cyber-font text-xs"
+        <button class="text-gray-400 hover:text-white underline mt-8 cursor-pointer cyber-font text-xs menu-click"
             onclick="navTo('screen-main')">&lt; BACK TO MAIN</button>
     </div>
 
     <!-- Game Screen -->
     <div id="screen-game" class="screen flex-col">
         <div id="game-container">
-            <!-- Left Side Panel (Mobile Top) -->
             <div class="ui-panel">
-                <button id="pause-btn" class="btn-cyber magenta py-2 px-2 text-sm mb-1 flex items-center justify-center"
+                <button id="pause-btn"
+                    class="btn-cyber magenta py-2 px-2 text-sm mb-1 flex items-center justify-center menu-click"
                     onclick="togglePause()">
                     <svg id="pause-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22"
                         height="22">
@@ -159,21 +192,36 @@
                 </div>
             </div>
 
-            <!-- Main Canvas Wrapper with Cyberpunk Border -->
             <div class="canvas-wrapper cyber-board-border relative">
                 <canvas id="tetris-canvas"></canvas>
 
-                <!-- Overlays -->
+                <!-- Pause Overlay -->
                 <div id="pause-overlay" class="overlay-msg glow-border-cyan text-cyan-400">
                     <div>SYSTEM PAUSED</div>
-                    <button class="btn-cyber mt-4 py-2 px-6 text-sm w-full font-bold"
+                    <button class="btn-cyber magenta mt-2 py-2 px-6 text-sm w-full font-bold menu-click"
                         onclick="resumeGame()">RESUME</button>
-                    <button class="btn-cyber magenta mt-2 py-2 px-6 text-sm w-full font-bold"
+                    <button class="btn-cyber mt-2 py-2 px-6 text-sm w-full font-bold menu-click"
+                        onclick="restartGame()">RESTART</button>
+                    <button class="btn-cyber magenta mt-2 py-2 px-6 text-sm w-full font-bold menu-click"
                         onclick="quitToLevelSelect()">SELECT LEVEL</button>
-                    <button class="text-xs text-gray-400 mt-3 underline cursor-pointer cyber-font"
-                        onclick="quitGame()">ABORT TO MAIN</button>
+                    <button class="text-xs text-red-400 mt-3 underline cursor-pointer cyber-font menu-click"
+                        onclick="showQuitConfirm(true)">QUIT GAME</button>
                 </div>
 
+                <!-- Quit Confirmation Modal Inside Pause -->
+                <div id="quit-confirm-overlay" class="overlay-msg"
+                    style="display: none; border-color: var(--neon-magenta); background: rgba(3,3,10,0.98);">
+                    <div class="text-pink-400 text-lg mb-2">ABORT SESSION?</div>
+                    <div class="text-xs text-gray-300 mb-4">Progress on current level will be saved.</div>
+                    <div class="flex flex-col gap-2 w-full">
+                        <button class="btn-cyber magenta py-2 px-4 text-xs font-bold menu-click"
+                            onclick="confirmQuitGame(true)">YES, QUIT TO MAIN</button>
+                        <button class="btn-cyber py-2 px-4 text-xs font-bold menu-click"
+                            onclick="confirmQuitGame(false)">NO, CONTINUE GAME</button>
+                    </div>
+                </div>
+
+                <!-- Game Over Overlay -->
                 <div id="gameover-overlay" class="overlay-msg text-red-500"
                     style="border-color:var(--neon-red); box-shadow: 0 0 30px rgba(255,51,51,0.4);">
                     <div class="text-red-400 glow-text-cyan" style="text-shadow: 0 0 10px var(--neon-red);">SYSTEM
@@ -182,16 +230,15 @@
                     <div class="text-base mt-3 text-white mb-4">Score: <span id="final-score"
                             class="text-cyan-400 font-bold"></span></div>
 
-                    <button class="btn-cyber py-2 px-6 text-sm w-full font-bold mb-2"
+                    <button class="btn-cyber py-2 px-6 text-sm w-full font-bold mb-2 menu-click"
                         onclick="retryGame()">RETRY</button>
-                    <button class="btn-cyber magenta py-2 px-6 text-sm w-full font-bold mb-2"
+                    <button class="btn-cyber magenta py-2 px-6 text-sm w-full font-bold mb-2 menu-click"
                         onclick="quitToLevelSelect()">SELECT LEVEL</button>
-                    <button class="text-xs text-gray-400 mt-2 underline cursor-pointer cyber-font"
+                    <button class="text-xs text-gray-400 mt-2 underline cursor-pointer cyber-font menu-click"
                         onclick="quitGame()">ABORT TO MAIN</button>
                 </div>
             </div>
 
-            <!-- Right Side Panel (Mobile Bottom) -->
             <div class="ui-panel">
                 <div class="stat-box">
                     <div class="stat-label">SCORE</div>
@@ -219,7 +266,6 @@
             </div>
         </div>
 
-        <!-- Mobile On-Screen Controls -->
         <div id="mobile-controls">
             <div class="ctrl-group">
                 <button class="ctrl-btn" id="btn-left">←</button>

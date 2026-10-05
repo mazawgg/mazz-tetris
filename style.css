@@ -36,7 +36,6 @@ h3,
     text-shadow: 0 0 8px var(--neon-magenta), 0 0 20px rgba(255, 0, 255, 0.6);
 }
 
-/* Sci-Fi Dual Border */
 .cyber-board-border {
     border-top: 2px solid var(--neon-cyan);
     border-bottom: 2px solid var(--neon-magenta);
@@ -116,7 +115,6 @@ h3,
     }
 }
 
-/* Stats Fullpage Layout khusus Grid 1-10 tanpa scroll */
 .stats-full-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -345,4 +343,90 @@ canvas {
     background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
     width: 100%;
     margin: 4px 0;
+}
+
+input[type="range"] {
+    accent-color: var(--neon-cyan);
+    cursor: pointer;
+}
+
+/* Custom Cyberpunk Dropdown Styling */
+.cyber-dropdown-wrapper {
+    position: relative;
+    width: 100%;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.cyber-dropdown-selected {
+    background: rgba(0, 243, 255, 0.05);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    padding: 10px 14px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+}
+
+.cyber-dropdown-selected:hover {
+    background: rgba(0, 243, 255, 0.15);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+
+.cyber-dropdown-selected::after {
+    content: '▼';
+    font-size: 0.7rem;
+    color: var(--neon-cyan);
+    transition: transform 0.2s ease;
+}
+
+.cyber-dropdown-wrapper.open .cyber-dropdown-selected::after {
+    transform: rotate(180deg);
+}
+
+.cyber-dropdown-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: rgba(3, 3, 12, 0.98);
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.cyber-dropdown-wrapper.open .cyber-dropdown-list {
+    display: flex;
+}
+
+.cyber-dropdown-item {
+    padding: 10px 14px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+}
+
+.cyber-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.cyber-dropdown-item:hover,
+.cyber-dropdown-item.selected {
+    background: var(--neon-cyan);
+    color: #000;
+    font-weight: bold;
+    padding-left: 18px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
